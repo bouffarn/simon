@@ -1,0 +1,17 @@
+Feedback:
+A   start game warning
+B   pattern goes faster as time goes on
+A   game over screen with score
+
+Glitches:
+Fixed   Keeps flashing after failing 2 times
+        clicking too fast glitches
+
+
+
+
+
+
+Features:
+A   Game Over/Start screen
+B   Pattern speeds up over time

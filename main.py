@@ -41,7 +41,6 @@ while Running:
             clicked = ""
             if len(chosen) == len(pattern):
                 if chosen == pattern:
-                    print("correct")
                     chosen, patternPos = [], 0
                     difficulty += 1
                     lastTime = currentTime + 500
@@ -61,7 +60,7 @@ while Running:
         elif lastTime + 500 < currentTime:
             gameOverPos += 1
             if gameOverPos == 3:
-                status, pattern, patternPos, chosen = "", [], 0, []
+                status, pattern, patternPos, chosen, gameOverPos = "", [], 0, [], 0
             gameOverPause, lastTime = not gameOverPause, currentTime
         if not gameOverPause:
             pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
@@ -79,7 +78,7 @@ while Running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             Running = False
-        elif event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONUP and patternPos == len(pattern):
             pos = pygame.mouse.get_pos()
             if green.collidepoint(pos):
                 clicked = "green"
