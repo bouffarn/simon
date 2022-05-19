@@ -4,10 +4,10 @@ pygame.init()
 size = width, height = 500, 500
 display = pygame.display.set_mode(size)
 
-completed = True
 options, pattern, patternPos, patternPause = ["green", "red", "yellow", "blue"], [], 0, False
-chosen, clicked, difficulty = [], "", 3
-lastTime = pygame.time.get_ticks()
+chosen, clicked, initialDifficulty, difficulty = [], "", 1, 0
+lastTime, status = pygame.time.get_ticks(), ""
+gameOverPos, gameOverPause = 0, False
 
 Running = True
 while Running:
@@ -20,13 +20,12 @@ while Running:
     blue = pygame.draw.rect(display, (0, 0, 128), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
     #   Simon Says
     if patternPos < len(pattern):
-        if lastTime+2000 < currentTime and not patternPause:
+        if lastTime+250 < currentTime and patternPause:
+            patternPause, lastTime = not patternPause, currentTime
+            lastTime = currentTime
+        elif lastTime+500 < currentTime:
             patternPos += 1
-            patternPause = not patternPause
-            lastTime = currentTime
-        elif lastTime+250 < currentTime and patternPause:
-            patternPause = not patternPause
-            lastTime = currentTime
+            patternPause, lastTime = not patternPause, currentTime
         if not patternPause:
             if pattern[patternPos] == "green":
                 pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
@@ -40,6 +39,13 @@ while Running:
     if clicked != "":
         if lastTime+500 < currentTime:
             clicked = ""
+            if len(chosen) == len(pattern):
+                if chosen == pattern:
+                    print("correct")
+                    chosen, patternPos = [], 0
+                    difficulty += 1
+                    lastTime = currentTime + 500
+                    pattern.append(random.choice(options))
         if clicked == "green":
             pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
         elif clicked == "red":
@@ -48,9 +54,24 @@ while Running:
             pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
         elif clicked == "blue":
             pygame.draw.rect(display, (0, 0, 255), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+    #   Game Over
+    if status == "end":
+        if lastTime + 250 < currentTime and gameOverPause:
+            gameOverPause, lastTime = not gameOverPause, currentTime
+        elif lastTime + 500 < currentTime:
+            gameOverPos += 1
+            if gameOverPos == 3:
+                status, pattern, patternPos, chosen = "", [], 0, []
+            gameOverPause, lastTime = not gameOverPause, currentTime
+        if not gameOverPause:
+            pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
+            pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
+            pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
+            pygame.draw.rect(display, (0, 0, 255), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
     # Logic
     #   New Game
-    if completed and len(pattern) == 0:
+    if len(pattern) == 0:
+        difficulty = initialDifficulty
         for i in range(difficulty):
             pattern.append(random.choice(options))
         lastTime = currentTime
@@ -60,21 +81,20 @@ while Running:
             Running = False
         elif event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
-            if clicked == "":
-                if green.collidepoint(pos):
-                    clicked = "green"
-                elif red.collidepoint(pos):
-                    clicked = "red"
-                elif yellow.collidepoint(pos):
-                    clicked = "yellow"
-                elif blue.collidepoint(pos):
-                    clicked = "blue"
+            if green.collidepoint(pos):
+                clicked = "green"
                 chosen.append(clicked)
-                lastTime = currentTime
+            elif red.collidepoint(pos):
+                clicked = "red"
+                chosen.append(clicked)
+            elif yellow.collidepoint(pos):
+                clicked = "yellow"
+                chosen.append(clicked)
+            elif blue.collidepoint(pos):
+                clicked = "blue"
+                chosen.append(clicked)
+            lastTime = currentTime
             if len(chosen) == len(pattern):
-                if chosen == pattern:
-                    print("correct")
-                else:
-                    print("incorrect")
+                if not chosen == pattern:
+                    status = "end"
     pygame.display.flip()
-#
