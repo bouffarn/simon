@@ -1,11 +1,12 @@
 Feedback:
-A   start game warning
-B   pattern goes faster as time goes on
-A   game over screen with score
+Added   start game warning
+Added   pattern goes faster as time goes on
+Added   Game over screen with score
+Added   Make blue square flash brighter
 
 Glitches:
 Fixed   Keeps flashing after failing 2 times
-        clicking too fast glitches
+Maybe?  clicking too fast glitches
 
 
 
@@ -13,5 +14,5 @@ Fixed   Keeps flashing after failing 2 times
 
 
 Features:
-A   Game Over/Start screen
-B   Pattern speeds up over time
+Added   Game Over/Start screen
+Added   Pattern speeds up over time
