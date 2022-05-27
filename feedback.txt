@@ -1,15 +1,15 @@
 Feedback:
-Added   start game warning
-Added   pattern goes faster as time goes on
+Added   Start game warning
+Added   Pattern goes faster as time goes on
 Added   Game over screen with score
 Added   Make blue square flash brighter
+Other   Make it go faster quicker
+        Make options for different difficulties
+Added   Make the menu screen look nicer
 
 Glitches:
 Fixed   Keeps flashing after failing 2 times
 Maybe?  clicking too fast glitches
-
-
-
 
 
 

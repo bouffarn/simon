@@ -20,7 +20,7 @@ except pygame.error:
     print("SOUND NOT INITIALIZED!!!")
 # variables
 options, pattern, patternPos, patternPause, initialPatternTime, patternTime = ["green", "red", "yellow",
-                                                                               "blue"], [], 1, False, 500, 500
+                                                                               "blue"], [], 1, True, 500, 500
 chosen, clicked, initialDifficulty, difficulty, lastScore = [], "", 1, 0, 0
 lastTime, status = pygame.time.get_ticks(), "menu"
 gameOverPos, gameOverPause = 0, False
@@ -109,20 +109,34 @@ while Running:
         pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
     #   Game Over
     if status == "menu":
+        # background
+        pygame.draw.rect(display, (0, 128, 0), pygame.Rect(0, 0, width / 2, height / 2))
+        pygame.draw.rect(display, (128, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
+        pygame.draw.rect(display, (128, 128, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
+        pygame.draw.rect(display, (0, 0, 128), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+        if int(currentTime/250)-int(currentTime/1000)*4 == 1:
+            pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
+        elif int(currentTime/250)-int(currentTime/1000)*4 == 2:
+            pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
+        elif int(currentTime/250)-int(currentTime/1000)*4 == 3:
+            pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+        else:
+            pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
+        # title
         title = fontTitle.render("Simon!", True, (0, 0, 0))
         display.blit(title, (width / 2 - title.get_width() / 2, 50))
-
+        # score
         scoreText = fontButton.render("Score: " + str(lastScore), True, (0, 0, 0))
         display.blit(scoreText, (width / 2 - scoreText.get_width() / 2, 100 + title.get_height()))
         highScoreText = fontButton.render("High Score: " + str(data["highScore"]), True, (0, 0, 0))
         display.blit(highScoreText,
                      (width / 2 - highScoreText.get_width() / 2, 100 + title.get_height() + scoreText.get_height()))
-
+        # play button
         playPos = [width / 2, height / 2]
-        playText = fontButton.render("Play!", True, (0, 0, 0))
-        playButton = pygame.draw.rect(display, (128, 128, 128), (
-        playPos[0] - playText.get_rect()[2] / 2 - 10, playPos[1] - playText.get_rect()[3] / 2 - 10,
-        playText.get_rect()[2] + 20, playText.get_rect()[3] + 20))
+        playText = fontButton.render("Play!", True, (255, 255, 255))
+        playButton = pygame.draw.rect(display, (0, 0, 0), (
+            playPos[0] - playText.get_rect()[2] / 2 - 10, playPos[1] - playText.get_rect()[3] / 2 - 10,
+            playText.get_rect()[2] + 20, playText.get_rect()[3] + 20))
         display.blit(playText, (playPos[0] - playText.get_width() / 2, playPos[1] - playText.get_height() / 2))
     elif status == "end":
         if lastTime + 250 < currentTime and gameOverPause:
@@ -156,8 +170,7 @@ while Running:
             pos = pygame.mouse.get_pos()
             if status == "menu":
                 if playButton.collidepoint(pos):
-                    lastTime = currentTime
-                    status, pattern, patternPos, chosen, gameOverPos, patternTime = "", [], 0, [], 0, initialPatternTime
+                    status, pattern, patternPos, patternPause, chosen, gameOverPos, patternTime = "", [], 0, True, [], 0, initialPatternTime
             elif patternPos == len(pattern) and len(chosen) < len(pattern):
                 if sound:
                     soundGreen.stop()
