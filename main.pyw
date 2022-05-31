@@ -1,12 +1,13 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 import random
 import json
-import os
 
 # pygame variables
 pygame.init()
-size = width, height = 500, 500
-display = pygame.display.set_mode(size)
+size = 500, 500
+display = pygame.display.set_mode(size, pygame.RESIZABLE)
 fontTitle, fontButton = pygame.font.SysFont(None, 72), pygame.font.SysFont(None, 36)
 
 try:
@@ -41,6 +42,7 @@ def save():
 
 Running = True
 while Running:
+    width, height = display.get_size()
     currentTime = pygame.time.get_ticks()
     # Display
     display.fill((255, 255, 255))
