@@ -197,7 +197,6 @@ while Running:
                         soundBlue.play(-1)
                 chosen.append(clicked)
                 lastTime = currentTime
-                if len(chosen) == len(pattern):
-                    if not chosen == pattern:
-                        status = "end"
+                if not chosen == pattern[0:len(chosen)]:
+                    status = "end"
     pygame.display.flip()
