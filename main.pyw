@@ -1,5 +1,4 @@
 import os
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 import random
 import json
@@ -18,7 +17,7 @@ try:
     sound = True
 except pygame.error:
     sound = False
-    print("SOUND NOT INITIALIZED!!!")
+    print("\nSOUND NOT INITIALIZED!!!")
 # variables
 options, pattern, patternPos, patternPause, initialPatternTime, patternTime = ["green", "red", "yellow",
                                                                                "blue"], [], 1, True, 500, 500
@@ -28,15 +27,17 @@ gameOverPos, gameOverPause = 0, False
 soundPlaying = False
 # save data
 data = {"dataVersion": 0, "highScore": 0}
-if os.path.exists("save.json"):
-    file = open("save.json")
+if os.path.exists("save/save.json"):
+    file = open("save/save.json")
     data = json.load(file)
     file.close()
 
 
 def save():
     global data
-    with open("save.json", "w") as f:
+    if not os.path.exists("save/"):
+        os.makedirs("save/")
+    with open("save/save.json", "w+") as f:
         json.dump(data, f)
 
 
