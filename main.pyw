@@ -7,7 +7,10 @@ import json
 pygame.init()
 size = 500, 500
 display = pygame.display.set_mode(size, pygame.RESIZABLE)
+pygame.display.set_caption("Simon!")
+pygame.display.set_icon(pygame.image.load("icon.png"))
 fontTitle, fontButton = pygame.font.SysFont(None, 72), pygame.font.SysFont(None, 36)
+gridX, gridY = 2, 2
 
 try:
     soundGreen = pygame.mixer.Sound("sound/220.wav")
@@ -45,13 +48,16 @@ Running = True
 while Running:
     width, height = display.get_size()
     currentTime = pygame.time.get_ticks()
+    clickLeft, clickMiddle, clickRight = pygame.mouse.get_pressed()
     # Display
-    display.fill((255, 255, 255))
+    display.fill((0, 0, 0))
     if not status == "menu":
-        green = pygame.draw.rect(display, (0, 128, 0), pygame.Rect(0, 0, width / 2, height / 2))
-        red = pygame.draw.rect(display, (128, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
-        yellow = pygame.draw.rect(display, (128, 128, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
-        blue = pygame.draw.rect(display, (0, 0, 128), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+        green = pygame.draw.rect(display, (0, 128, 0), pygame.Rect(0, 0, width / gridX, height / gridY))
+        red = pygame.draw.rect(display, (128, 0, 0), pygame.Rect(width / gridX, 0, width / gridX, height / gridY))
+        yellow = pygame.draw.rect(display, (128, 128, 0), pygame.Rect(0, height / gridY, width / gridX, height / gridY))
+        blue = pygame.draw.rect(display, (0, 0, 128), pygame.Rect(width / gridX, height / gridY, width / gridX, height / gridY))
+        purple = pygame.draw.rect(display, (128, 0, 128), pygame.Rect((width / gridX) * 2, 0, width / gridX, height / gridY))
+        orange = pygame.draw.rect(display, (128, 64, 0), pygame.Rect((width / gridX) * 2, height / gridY, width / gridX, height / gridY))
     #   Simon Says
     if patternPos < len(pattern) and status != "menu" and clicked == "":
         if lastTime + patternTime * 0.75 < currentTime and not patternPause:
@@ -67,22 +73,32 @@ while Running:
             patternPause, lastTime = not patternPause, currentTime
         if not patternPause:
             if pattern[patternPos] == "green":
-                pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
+                pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / gridX, height / gridY))
                 if not soundPlaying and sound:
                     soundPlaying = True
                     soundGreen.play(-1)
             elif pattern[patternPos] == "red":
-                pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
+                pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / gridX, 0, width / gridX, height / gridY))
                 if not soundPlaying and sound:
                     soundPlaying = True
                     soundRed.play(-1)
             elif pattern[patternPos] == "yellow":
-                pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
+                pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / gridY, width / gridX, height / gridY))
                 if not soundPlaying and sound:
                     soundPlaying = True
                     soundYellow.play(-1)
             elif pattern[patternPos] == "blue":
-                pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+                pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / gridX, height / gridY, width / gridX, height / gridY))
+                if not soundPlaying and sound:
+                    soundPlaying = True
+                    soundBlue.play(-1)
+            elif pattern[patternPos] == "purple":
+                pygame.draw.rect(display, (255, 0, 255), pygame.Rect((width / gridX) * 2, 0, width / gridX, height / gridY))
+                if not soundPlaying and sound:
+                    soundPlaying = True
+                    soundBlue.play(-1)
+            elif pattern[patternPos] == "orange":
+                pygame.draw.rect(display, (255, 128, 0), pygame.Rect((width / gridX) * 2, height / gridY, width / gridX, height / gridY))
                 if not soundPlaying and sound:
                     soundPlaying = True
                     soundBlue.play(-1)
@@ -103,28 +119,32 @@ while Running:
                 if patternTime > 100:
                     patternTime -= 10
     if clicked == "green":
-        pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
+        pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / gridX, height / gridY))
     elif clicked == "red":
-        pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
+        pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / gridX, 0, width / gridX, height / gridY))
     elif clicked == "yellow":
-        pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
+        pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / gridY, width / gridX, height / gridY))
     elif clicked == "blue":
-        pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+        pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / gridX, height / gridY, width / gridX, height / gridY))
+    elif clicked == "purple":
+        pygame.draw.rect(display, (255, 0, 255), pygame.Rect((width / gridX) * 2, 0, width / gridX, height / gridY))
+    elif clicked == "orange":
+        pygame.draw.rect(display, (255, 128, 0), pygame.Rect((width / gridX) * 2, height / gridY, width / gridX, height / gridY))
     #   Game Over
     if status == "menu":
         # background
-        pygame.draw.rect(display, (0, 128, 0), pygame.Rect(0, 0, width / 2, height / 2))
-        pygame.draw.rect(display, (128, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
-        pygame.draw.rect(display, (128, 128, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
-        pygame.draw.rect(display, (0, 0, 128), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+        pygame.draw.rect(display, (0, 128, 0), pygame.Rect(0, 0, width / gridX, height / gridY))
+        pygame.draw.rect(display, (128, 0, 0), pygame.Rect(width / gridX, 0, width / gridX, height / gridY))
+        pygame.draw.rect(display, (128, 128, 0), pygame.Rect(0, height / gridY, width / gridX, height / gridY))
+        pygame.draw.rect(display, (0, 0, 128), pygame.Rect(width / gridX, height / gridY, width / gridX, height / gridY))
         if int(currentTime/250)-int(currentTime/1000)*4 == 1:
-            pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
+            pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / gridX, height / gridY))
         elif int(currentTime/250)-int(currentTime/1000)*4 == 2:
-            pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
+            pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / gridX, 0, width / gridX, height / gridY))
         elif int(currentTime/250)-int(currentTime/1000)*4 == 3:
-            pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+            pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / gridX, height / gridY, width / gridX, height / gridY))
         else:
-            pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
+            pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / gridY, width / gridX, height / gridY))
         # title
         title = fontTitle.render("Simon!", True, (0, 0, 0))
         display.blit(title, (width / 2 - title.get_width() / 2, 50))
@@ -147,17 +167,18 @@ while Running:
         elif lastTime + 500 < currentTime:
             gameOverPos += 1
             if gameOverPos == 3:
-                lastScore = len(pattern) - 1
+                lastScore, status, gridX, gridY = len(pattern) - 1, "menu", 2, 2
                 if lastScore > data["highScore"]:
                     data["highScore"] = lastScore
                     save()
-                status = "menu"
             gameOverPause, lastTime = not gameOverPause, currentTime
         if not gameOverPause:
-            pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / 2, height / 2))
-            pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / 2, 0, width / 2, height / 2))
-            pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / 2, width / 2, height / 2))
-            pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / 2, height / 2, width / 2, height / 2))
+            pygame.draw.rect(display, (0, 255, 0), pygame.Rect(0, 0, width / gridX, height / gridY))
+            pygame.draw.rect(display, (255, 0, 0), pygame.Rect(width / gridX, 0, width / gridX, height / gridY))
+            pygame.draw.rect(display, (255, 255, 0), pygame.Rect(0, height / gridY, width / gridX, height / gridY))
+            pygame.draw.rect(display, (50, 50, 255), pygame.Rect(width / gridX, height / gridY, width / gridX, height / gridY))
+            pygame.draw.rect(display, (255, 0, 255), pygame.Rect((width / gridX) * 2, 0, width / gridX, height / gridY))
+            pygame.draw.rect(display, (255, 128, 0), pygame.Rect((width / gridX) * 2, height / gridY, width / gridX, height / gridY))
     # Logic
     #   New Game
     if len(pattern) == 0:
@@ -172,8 +193,12 @@ while Running:
         elif event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
             if status == "menu":
-                if playButton.collidepoint(pos):
+                if playButton.collidepoint(pos) and clickLeft:
                     status, pattern, patternPos, patternPause, chosen, gameOverPos, patternTime = "", [], 0, True, [], 0, initialPatternTime
+                    options, gridX, gridY = ["green", "red", "yellow", "blue"], 2, 2
+                elif playButton.collidepoint(pos) and clickRight:
+                    status, pattern, patternPos, patternPause, chosen, gameOverPos, patternTime = "", [], 0, True, [], 0, initialPatternTime
+                    options, gridX, gridY = ["green", "red", "yellow", "blue", "purple", "orange"], 3, 2
             elif patternPos == len(pattern) and len(chosen) < len(pattern):
                 if sound:
                     soundGreen.stop()
@@ -194,6 +219,14 @@ while Running:
                         soundYellow.play(-1)
                 elif blue.collidepoint(pos):
                     clicked = "blue"
+                    if sound:
+                        soundBlue.play(-1)
+                elif purple.collidepoint(pos):
+                    clicked = "purple"
+                    if sound:
+                        soundBlue.play(-1)
+                elif orange.collidepoint(pos):
+                    clicked = "orange"
                     if sound:
                         soundBlue.play(-1)
                 chosen.append(clicked)
