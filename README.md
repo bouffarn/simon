@@ -1,1 +1,3 @@
 # simon
+
+![icon](icon.png)
